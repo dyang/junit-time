@@ -6,10 +6,12 @@ import org.hamcrest.core.Is;
 import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Ignore;
 
 import java.io.File;
 import java.io.IOException;
 
+@Ignore
 public class JunitTimeTest {
     private FileSet testReports;
     private JunitTime jt;

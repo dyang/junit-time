@@ -9,23 +9,26 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
+import org.junit.Ignore;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class JunitTimeTest {
     private static final String TEST_DATA = "test/data";
 
     private JunitTime jt;
-    private FileSet testReports;
     private File toDir;
     private File testResultsDir;
 
     @Before
     public void setup() throws IOException {
-        testReports = createJunitReportFiles();
+        FileSet testReports = createJunitReportFiles();
         toDir = FileUtil.createTempFolder();
         jt = new JunitTime();
+        jt.addFileSet(testReports);
+        jt.setToDir(toDir);
     }
 
     @After
@@ -50,11 +53,10 @@ public class JunitTimeTest {
 
     @Test
     public void shouldGenerateReport() {
-        jt.addFileSet(testReports);
-        jt.setToDir(toDir);
-
         assertThat(toDir.listFiles().length, is(0));
+
         jt.execute();
+
         assertThat(toDir.listFiles().length, is(1));
         assertThat(toDir.listFiles()[0].getName(), is(JunitTime.REPORT_CSV));
     }
@@ -62,13 +64,45 @@ public class JunitTimeTest {
     @Test
     public void shouldCreateToDirIfNotExist() {
         toDir = new File(toDir, "report");
-        toDir.deleteOnExit();
-
-        jt.addFileSet(testReports);
         jt.setToDir(toDir);
 
         assertThat(toDir.exists(), is(false));
+
         jt.execute();
-        assertThat(toDir.exists(), is(true));        
+
+        assertThat(toDir.exists(), is(true));
+    }
+
+    @Test
+    @Ignore("end2end test - implementation in progress")
+    public void shouldExtractTestResultAndGenerateCSVReport() throws IOException {
+        jt.execute();
+
+        File csv = toDir.listFiles()[0];
+        Lines lines = new Lines(FileUtils.readLines(csv));
+
+        assertThat(lines.size(), is(6));
+        assertThat(lines.at(0), is("com.googlecode.junittime.domain.TestCaseTest, shouldReturnOneIfAIsSlowerThanB, 0.0010"));
+        assertThat(lines.at(1), is("com.googlecode.junittime.domain.TestCaseTest, shouldReturnMinusOneIfAIsFasterThanB, 0.0010"));
+        assertThat(lines.at(2), is("com.googlecode.junittime.domain.TestCaseTest, shouldReturnZeroIfAEqualsToB, 0.0010"));
+        assertThat(lines.at(3), is("com.googlecode.junittime.domain.TestCaseRepositoryTest, shouldSortTestsAccordingToDurationDesc, 0.0020"));
+        assertThat(lines.at(4), is("com.googlecode.junittime.JunitTimeTest, shouldCreateToDirIfNotExist, 0.0020"));
+        assertThat(lines.at(5), is("com.googlecode.junittime.JunitTimeTest, com.googlecode.junittime.JunitTimeTest, 0.029"));
+    }
+
+    private class Lines{
+        private List lines;
+
+        Lines(List lines) {
+            this.lines = lines;
+        }
+
+        String at(int index) {
+            return (String) lines.get(index);
+        }
+
+        int size() {
+            return lines.size();
+        }
     }
 }

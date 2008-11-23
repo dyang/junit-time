@@ -1,5 +1,7 @@
 package com.googlecode.junittime.utils;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
@@ -37,5 +39,9 @@ public class FileUtil {
 
     private static String tempFolderName() {
         return System.getProperty("java.io.tmpdir");
+    }
+
+    public static void delete(File testResultsDir) {
+        FileUtils.deleteQuietly(testResultsDir);
     }
 }

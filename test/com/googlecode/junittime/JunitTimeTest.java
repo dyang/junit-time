@@ -3,19 +3,23 @@ package com.googlecode.junittime;
 import com.googlecode.junittime.utils.FileUtil;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.Project;
-import org.hamcrest.core.Is;
+import org.apache.commons.io.FileUtils;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.After;
 
 import java.io.File;
 import java.io.IOException;
 
 public class JunitTimeTest {
-    private FileSet testReports;
+    private static final String TEST_DATA = "test/data";
+
     private JunitTime jt;
+    private FileSet testReports;
     private File toDir;
+    private File testResultsDir;
 
     @Before
     public void setup() throws IOException {
@@ -24,17 +28,24 @@ public class JunitTimeTest {
         jt = new JunitTime();
     }
 
-    private FileSet createJunitReportFiles() {
-        FileSet reports = new FileSet();
-        reports.setProject(new Project());
-        reports.setDir(generateTestReports());
-        return reports;
+    @After
+    public void tearDown() {
+        FileUtil.delete(testResultsDir);
+        FileUtil.delete(toDir);
     }
 
-    private File generateTestReports() {
-        File testReportsDir = FileUtil.createTempFolder();
-        
-        return testReportsDir;
+    private FileSet createJunitReportFiles() throws IOException {
+        FileSet testResults = new FileSet();
+        testResults.setProject(new Project());
+        testResultsDir = generateTestResults();
+        testResults.setDir(testResultsDir);
+        return testResults;
+    }
+
+    private File generateTestResults() throws IOException {
+        File testResultsDir = FileUtil.createTempFolder();
+        FileUtils.copyDirectory(new File(TEST_DATA), testResultsDir);
+        return testResultsDir;
     }
 
     @Test
@@ -50,14 +61,14 @@ public class JunitTimeTest {
 
     @Test
     public void shouldCreateToDirIfNotExist() {
-        File toBeCreated = new File(toDir, "report");
-        toBeCreated.deleteOnExit();
+        toDir = new File(toDir, "report");
+        toDir.deleteOnExit();
 
         jt.addFileSet(testReports);
-        jt.setToDir(toBeCreated);
+        jt.setToDir(toDir);
 
-        assertThat(toBeCreated.exists(), is(false));
+        assertThat(toDir.exists(), is(false));
         jt.execute();
-        assertThat(toBeCreated.exists(), is(true));        
+        assertThat(toDir.exists(), is(true));        
     }
 }

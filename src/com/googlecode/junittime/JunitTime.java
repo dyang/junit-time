@@ -12,9 +12,10 @@ public class JunitTime extends Task {
     static final String REPORT_CSV = "junit-time-report.csv";
 
     private File toDir;
+    private FileSet from;
 
     public void addFileSet(FileSet from) {
-
+        this.from = from;
     }
 
     public void setToDir(File toDir) {
@@ -22,11 +23,22 @@ public class JunitTime extends Task {
     }
 
     public void execute() throws BuildException {
+        ensureTestResultsExist();
+        generateReport();
+    }
+
+    private void generateReport() {
         File reportFile = reportFile();
         try {
             createFile(reportFile);
         } catch (IOException e) {
             throw new BuildException("Unable to create report at " + reportFile.getAbsolutePath());
+        }
+    }
+
+    private void ensureTestResultsExist() {
+        if (!from.getDir().exists()) {
+            throw new BuildException("Directory " + from.getDir().getAbsolutePath() + " not found");
         }
     }
 

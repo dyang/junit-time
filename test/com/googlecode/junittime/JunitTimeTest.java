@@ -3,6 +3,7 @@ package com.googlecode.junittime;
 import com.googlecode.junittime.utils.FileUtil;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.BuildException;
 import org.apache.commons.io.FileUtils;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -15,6 +16,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import static junit.framework.Assert.fail;
+
 public class JunitTimeTest {
     private static final String TEST_DATA = "test/data";
 
@@ -24,11 +27,12 @@ public class JunitTimeTest {
 
     @Before
     public void setup() throws IOException {
-        FileSet testReports = createJunitReportFiles();
-        toDir = FileUtil.createTempFolder();
         jt = new JunitTime();
-        jt.addFileSet(testReports);
+
+        toDir = FileUtil.createTempFolder();
         jt.setToDir(toDir);
+        testResultsDir = generateTestResults();
+        jt.addFileSet(createJunitReportFiles(testResultsDir));
     }
 
     @After
@@ -37,11 +41,10 @@ public class JunitTimeTest {
         FileUtil.delete(toDir);
     }
 
-    private FileSet createJunitReportFiles() throws IOException {
+    private FileSet createJunitReportFiles(File dir) throws IOException {
         FileSet testResults = new FileSet();
         testResults.setProject(new Project());
-        testResultsDir = generateTestResults();
-        testResults.setDir(testResultsDir);
+        testResults.setDir(dir);
         return testResults;
     }
 
@@ -71,6 +74,21 @@ public class JunitTimeTest {
         jt.execute();
 
         assertThat(toDir.exists(), is(true));
+    }
+
+    @Test
+    public void shouldThrowIfTestResultsDirNotExist() throws IOException {
+        testResultsDir = new File(testResultsDir, "dirNotExist");
+        jt.addFileSet(createJunitReportFiles(testResultsDir));
+
+        assertThat(testResultsDir.exists(), is(false));
+
+        try {
+            jt.execute();
+            fail("should have thrown when test results are not found");
+        } catch (BuildException e) {
+
+        }
     }
 
     @Test

@@ -2,12 +2,14 @@
     <!-- properties -->
     <property name="src" value="${basedir}/src"/>
     <property name="test" value="${basedir}/test"/>
+    <property name="test.data" value="${test}/data"/>
     <property name="target" value="${basedir}/target"/>
     <property name="lib" value="${basedir}/lib"/>
     <property name="target.common" value="${target}/common"/>
     <property name="target.test" value="${target}/test"/>
     <property name="target.reports" value="${target}/reports"/>
     <property name="pattern.test" value="*Test.java"/>
+    <property name="pattern.test.resource" value="*.xml"/>
 
     <!-- main -->
     <target name="default" depends="clean, init, compile.src, compile.test, test"/>
@@ -16,7 +18,13 @@
     <path id="lib.classpath">
         <pathelement location="${lib}/ant-1.7.0.jar"/>
         <pathelement location="${lib}/junit-4.4.jar"/>
+        <pathelement location="${lib}/commons-io-1.4.jar"/>
     </path>
+
+    <!-- patternset -->
+    <patternset id="test.resources">
+        <include name="**/?*.xml" />
+    </patternset>
 
     <!-- targets -->
     <target name="clean">
@@ -30,7 +38,7 @@
     <target name="compile.src">
         <mkdir dir="${target.common}"/>
         <javac classpathref="lib.classpath" srcdir="${src}" destdir="${target.common}" source="1.6" target="1.6"
-               debug="true">
+        debug="true">
         </javac>
     </target>
 
@@ -42,6 +50,13 @@
                 <pathelement location="${target.common}"/>
             </classpath>
         </javac>
+
+        <copy todir="${target.test}">
+            <fileset dir="${test}">
+                <patternset refid="test.resources" />
+                <type type="file" />
+            </fileset>
+        </copy>
     </target>
 
     <target name="test">

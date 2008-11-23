@@ -2,37 +2,62 @@ package com.googlecode.junittime;
 
 import com.googlecode.junittime.utils.FileUtil;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.Project;
 import org.hamcrest.core.Is;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Ignore;
 
 import java.io.File;
 import java.io.IOException;
 
-@Ignore
 public class JunitTimeTest {
     private FileSet testReports;
     private JunitTime jt;
-    private File resultFile;
+    private File toDir;
 
     @Before
     public void setup() throws IOException {
-        testReports = new FileSet();
-        testReports.setDir(FileUtil.createTempFolder());
-        resultFile = FileUtil.aTempFile();
-
+        testReports = createJunitReportFiles();
+        toDir = FileUtil.createTempFolder();
         jt = new JunitTime();
     }
-    
+
+    private FileSet createJunitReportFiles() {
+        FileSet reports = new FileSet();
+        reports.setProject(new Project());
+        reports.setDir(generateTestReports());
+        return reports;
+    }
+
+    private File generateTestReports() {
+        File testReportsDir = FileUtil.createTempFolder();
+        
+        return testReportsDir;
+    }
+
     @Test
     public void shouldGenerateReport() {
-        assertThat(resultFile.exists(), Is.is(false));
+        jt.addFileSet(testReports);
+        jt.setToDir(toDir);
+
+        assertThat(toDir.listFiles().length, is(0));
+        jt.execute();
+        assertThat(toDir.listFiles().length, is(1));
+        assertThat(toDir.listFiles()[0].getName(), is(JunitTime.REPORT_CSV));
+    }
+
+    @Test
+    public void shouldCreateToDirIfNotExist() {
+        File toBeCreated = new File(toDir, "report");
+        toBeCreated.deleteOnExit();
 
         jt.addFileSet(testReports);
-        jt.setResultFile(resultFile);
+        jt.setToDir(toBeCreated);
 
-        assertThat(resultFile.exists(), Is.is(true));
+        assertThat(toBeCreated.exists(), is(false));
+        jt.execute();
+        assertThat(toBeCreated.exists(), is(true));        
     }
 }

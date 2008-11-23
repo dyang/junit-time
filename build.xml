@@ -62,4 +62,14 @@
             </batchtest>
         </junit>
     </target>
+
+    <!--
+    <target name="analyze">
+        <junit-time todir="${target.reports}">
+            <fileset dir="${target.reports}">
+                <include name="**/*Test.xml" />
+            </fileset>
+        </junit-time>
+    </target>
+    -->
 </project>

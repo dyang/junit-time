@@ -18,6 +18,7 @@
         <pathelement location="${lib}/ant-1.7.0.jar"/>
         <pathelement location="${lib}/junit-4.4.jar"/>
         <pathelement location="${lib}/commons-io-1.4.jar"/>
+        <pathelement location="${lib}/commons-lang-2.4.jar"/>
     </path>
 
     <!-- patternset -->

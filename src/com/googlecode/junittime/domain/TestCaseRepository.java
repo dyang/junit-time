@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class TestCaseRepository {
-    List<TestCase> testCases = new ArrayList<TestCase>();
+    private List<TestCase> testCases = new ArrayList<TestCase>();
 
     public void add(TestCase testCase) {
         testCases.add(testCase);

@@ -26,4 +26,11 @@ public class TestCaseTest {
         TestCase testCase2 = new TestCase("className", "testName", 10.5d);
         assertThat(testCase1.compareDuration(testCase2), is(0));
     }
+
+    @Test
+    public void equalityTest() {
+        TestCase testCase1 = new TestCase("className", "testName", 10.5d);
+        TestCase testCase2 = new TestCase("className", "testName", 10.5d);
+        assertThat(testCase1, is(testCase2));
+    }
 }

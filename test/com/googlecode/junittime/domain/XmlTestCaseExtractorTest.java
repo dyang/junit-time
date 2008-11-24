@@ -16,7 +16,7 @@ public class XmlTestCaseExtractorTest {
     private static final String FILE_WITH_TWO_TESTCASES = "TEST-com.googlecode.junittime.JunitTimeTest.xml";
 
     @Test
-    public void shouldExtractFromXmlTestResultFile() throws IOException, SAXException, ParserConfigurationException {
+    public void shouldExtractFromXmlTestResultFile() throws ExtractionException {
         XmlTestCaseExtractor extractor = new XmlTestCaseExtractor(new File(TEST_DATA, FILE_WITH_ONE_TESTCASE));
         TestCaseRepository repository = new TestCaseRepository();
         extractor.extractTo(repository);
@@ -28,7 +28,7 @@ public class XmlTestCaseExtractorTest {
     }
 
     @Test
-    public void shouldExtractFromXmlTestResultFileWithMultipleTestCases() throws IOException, SAXException, ParserConfigurationException {
+    public void shouldExtractFromXmlTestResultFileWithMultipleTestCases() throws ExtractionException {
         XmlTestCaseExtractor extractor = new XmlTestCaseExtractor(new File(TEST_DATA, FILE_WITH_TWO_TESTCASES));
         TestCaseRepository repository = new TestCaseRepository();
         extractor.extractTo(repository);

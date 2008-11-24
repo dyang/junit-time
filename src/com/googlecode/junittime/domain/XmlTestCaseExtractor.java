@@ -14,8 +14,16 @@ public class XmlTestCaseExtractor implements TestCaseExtractor {
         this.file = file;
     }
 
-    public void extractTo(TestCaseRepository repository) throws SAXException, ParserConfigurationException, IOException {
-        SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-        parser.parse(file, new TestCaseHandler(repository));
+    public void extractTo(TestCaseRepository repository) throws ExtractionException {
+        try {
+            SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+            parser.parse(file, new TestCaseHandler(repository));
+        } catch (SAXException e) {
+            throw new ExtractionException(e);
+        } catch (IOException e) {
+            throw new ExtractionException(e);
+        } catch (ParserConfigurationException e) {
+            throw new ExtractionException(e);
+        }
     }
 }

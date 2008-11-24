@@ -6,5 +6,5 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
 public interface TestCaseExtractor {
-    public void extractTo(TestCaseRepository repository) throws SAXException, ParserConfigurationException, IOException;
+    public void extractTo(TestCaseRepository repository) throws ExtractionException;
 }

@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import static junit.framework.Assert.fail;
+
 public class XmlTestCaseExtractorTest {
     private static final String TEST_DATA = "test/data";
     private static final String FILE_WITH_ONE_TESTCASE = "TEST-com.googlecode.junittime.domain.TestCaseRepositoryTest.xml";
@@ -39,5 +41,16 @@ public class XmlTestCaseExtractorTest {
                 is(new TestCase("com.googlecode.junittime.JunitTimeTest", "shouldCreateToDirIfNotExist", 0.0020)));
         assertThat(testCases.get(1),
                 is(new TestCase("com.googlecode.junittime.JunitTimeTest", "shouldGenerateReport", 0.029)));
+    }
+
+    @Test
+    public void shouldThrowWhenExtractionFails() {
+        XmlTestCaseExtractor extractor = new XmlTestCaseExtractor(new File(TEST_DATA, "fileNotExist"));
+        TestCaseRepository repository = new TestCaseRepository();
+        try {
+            extractor.extractTo(repository);
+            fail("should have thrown when file is not found");
+        } catch (ExtractionException e) {
+        }
     }
 }

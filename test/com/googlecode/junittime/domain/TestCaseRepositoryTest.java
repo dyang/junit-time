@@ -3,8 +3,12 @@ package com.googlecode.junittime.domain;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import org.junit.Test;
+import org.apache.commons.io.FileUtils;
 
 import java.util.List;
+
+import com.googlecode.junittime.domain.reporting.CSVReportGenerator;
+import com.googlecode.junittime.domain.reporting.Lines;
 
 public class TestCaseRepositoryTest {
     @Test
@@ -20,8 +24,8 @@ public class TestCaseRepositoryTest {
 
         List<TestCase> allSorted = testCases.byDurationDesc();
         assertThat(allSorted.size(), is(3));
-        assertThat(allSorted.get(0), is(test1));
+        assertThat(allSorted.get(0), is(test2));
         assertThat(allSorted.get(1), is(test3));
-        assertThat(allSorted.get(2), is(test2));
+        assertThat(allSorted.get(2), is(test1));
     }
 }

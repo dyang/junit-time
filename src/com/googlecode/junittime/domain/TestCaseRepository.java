@@ -16,7 +16,7 @@ public class TestCaseRepository {
         Collections.sort(testCases, new Comparator<TestCase>() {
 
             public int compare(TestCase testCase1, TestCase testCase2) {
-                return testCase1.compareDuration(testCase2);                
+                return testCase1.compareDuration(testCase2).toInt();                
             }
         });
         return testCases;

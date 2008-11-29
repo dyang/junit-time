@@ -1,6 +1,7 @@
 package com.googlecode.junittime;
 
 import com.googlecode.junittime.utils.FileUtil;
+import com.googlecode.junittime.domain.reporting.Lines;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
@@ -14,7 +15,6 @@ import org.junit.Ignore;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import static junit.framework.Assert.fail;
 
@@ -108,19 +108,4 @@ public class JunitTimeTest {
         assertThat(lines.at(5), is("com.googlecode.junittime.JunitTimeTest, com.googlecode.junittime.JunitTimeTest, 0.029"));
     }
 
-    private class Lines{
-        private List lines;
-
-        Lines(List lines) {
-            this.lines = lines;
-        }
-
-        String at(int index) {
-            return (String) lines.get(index);
-        }
-
-        int size() {
-            return lines.size();
-        }
-    }
 }

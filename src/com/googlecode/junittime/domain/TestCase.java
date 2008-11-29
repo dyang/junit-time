@@ -1,6 +1,7 @@
 package com.googlecode.junittime.domain;
 
 import org.apache.commons.lang.StringUtils;
+import static com.googlecode.junittime.domain.Slowness.*;
 
 public class TestCase {
     private String className;
@@ -13,26 +14,50 @@ public class TestCase {
         this.duration = duration;
     }
 
-    public int compareDuration(TestCase anotherTestCase) {
+    public String getClassName() {
+        return className;
+    }
+
+    public String getTestName() {
+        return testName;
+    }
+
+    public double getDuration() {
+        return duration;
+    }
+
+    public Slowness compareDuration(TestCase anotherTestCase) {
         double slowness = duration - anotherTestCase.duration;
 
         if (slowness > 0) {
-            return 1;
+            return SLOWER;
         } else if (slowness == 0) {
-            return 0;
+            return SAME;
         } else {
-            return -1;
+            return FASTER;
         }
     }
 
     public boolean equals(Object o) {
-        if (o == null || !(o instanceof TestCase)) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        TestCase another = (TestCase)o;
-        return StringUtils.equals(className, another.className) &&
-                StringUtils.equals(testName, another.testName) &&
-                Double.compare(duration, another.duration) == 0;
+        TestCase testCase = (TestCase) o;
+
+        if (Double.compare(testCase.duration, duration) != 0) return false;
+        if (className != null ? !className.equals(testCase.className) : testCase.className != null) return false;
+        if (testName != null ? !testName.equals(testCase.testName) : testCase.testName != null) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        int result;
+        long temp;
+        result = (className != null ? className.hashCode() : 0);
+        result = 31 * result + (testName != null ? testName.hashCode() : 0);
+        temp = duration != +0.0d ? Double.doubleToLongBits(duration) : 0L;
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
     }
 }

@@ -1,16 +1,12 @@
 package com.googlecode.junittime.domain;
 
+import static junit.framework.Assert.fail;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import org.junit.Test;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
-
-import static junit.framework.Assert.fail;
 
 public class XmlTestCaseExtractorTest {
     private static final String TEST_DATA = "test/data";
@@ -38,9 +34,10 @@ public class XmlTestCaseExtractorTest {
         List<TestCase> testCases = repository.byDurationDesc();
         assertThat(testCases.size(), is(2));
         assertThat(testCases.get(0),
-                is(new TestCase("com.googlecode.junittime.JunitTimeTest", "shouldCreateToDirIfNotExist", 0.0020)));
-        assertThat(testCases.get(1),
                 is(new TestCase("com.googlecode.junittime.JunitTimeTest", "shouldGenerateReport", 0.029)));
+        assertThat(testCases.get(1),
+                is(new TestCase("com.googlecode.junittime.JunitTimeTest", "shouldCreateToDirIfNotExist", 0.0020)));
+
     }
 
     @Test

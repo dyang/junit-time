@@ -12,6 +12,8 @@ import java.util.List;
 // job: generate csv report according to testCaseRepository
 public class CSVReportGenerator implements ReportGenerator {
     public void generate(File reportFile, TestCaseRepository testCaseRepository) throws IOException {
+        // TODO - should be able to specify which report to generate instead of
+        // hard coding byDurationDesc here
         writeBufferToFile(reportFile, generateCSVInBuffer(testCaseRepository.byDurationDesc()));
     }
 
@@ -24,7 +26,7 @@ public class CSVReportGenerator implements ReportGenerator {
     }
 
     private String generateLine(TestCase testCase) {
-        return format("%s, %s, %.2f%s",
+        return format("%s, %s, %.3f%s",
                 testCase.getClassName(),
                 testCase.getTestName(),
                 testCase.getDuration(),

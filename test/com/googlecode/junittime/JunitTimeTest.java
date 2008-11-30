@@ -1,22 +1,20 @@
 package com.googlecode.junittime;
 
-import com.googlecode.junittime.utils.FileUtil;
 import com.googlecode.junittime.domain.reporting.Lines;
-import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.BuildException;
+import com.googlecode.junittime.utils.FileUtil;
+import static junit.framework.Assert.fail;
 import org.apache.commons.io.FileUtils;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.FileSet;
 import static org.hamcrest.core.Is.is;
+import org.junit.After;
 import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.After;
-import org.junit.Ignore;
 
 import java.io.File;
 import java.io.IOException;
-
-import static junit.framework.Assert.fail;
 
 public class JunitTimeTest {
     private static final String TEST_DATA = "test/data";
@@ -39,19 +37,6 @@ public class JunitTimeTest {
     public void tearDown() {
         FileUtil.delete(testResultsDir);
         FileUtil.delete(toDir);
-    }
-
-    private FileSet createJunitReportFiles(File dir) throws IOException {
-        FileSet testResults = new FileSet();
-        testResults.setProject(new Project());
-        testResults.setDir(dir);
-        return testResults;
-    }
-
-    private File generateTestResults() throws IOException {
-        File testResultsDir = FileUtil.createTempFolder();
-        FileUtils.copyDirectory(new File(TEST_DATA), testResultsDir);
-        return testResultsDir;
     }
 
     @Test
@@ -92,7 +77,6 @@ public class JunitTimeTest {
     }
 
     @Test
-    @Ignore("end2end test - implementation in progress")
     public void shouldExtractTestResultAndGenerateCSVReport() throws IOException {
         jt.execute();
 
@@ -100,12 +84,35 @@ public class JunitTimeTest {
         Lines lines = new Lines(FileUtils.readLines(csv));
 
         assertThat(lines.size(), is(6));
-        assertThat(lines.at(0), is("com.googlecode.junittime.domain.TestCaseTest, shouldReturnOneIfAIsSlowerThanB, 0.0010"));
-        assertThat(lines.at(1), is("com.googlecode.junittime.domain.TestCaseTest, shouldReturnMinusOneIfAIsFasterThanB, 0.0010"));
-        assertThat(lines.at(2), is("com.googlecode.junittime.domain.TestCaseTest, shouldReturnZeroIfAEqualsToB, 0.0010"));
-        assertThat(lines.at(3), is("com.googlecode.junittime.domain.TestCaseRepositoryTest, shouldSortTestsAccordingToDurationDesc, 0.0020"));
-        assertThat(lines.at(4), is("com.googlecode.junittime.JunitTimeTest, shouldCreateToDirIfNotExist, 0.0020"));
-        assertThat(lines.at(5), is("com.googlecode.junittime.JunitTimeTest, com.googlecode.junittime.JunitTimeTest, 0.029"));
+        assertThat(lines.at(0), is("com.googlecode.junittime.JunitTimeTest, shouldGenerateReport, 0.029"));
+        assertThat(lines.at(1), is("com.googlecode.junittime.JunitTimeTest, shouldCreateToDirIfNotExist, 0.002"));
+        assertThat(lines.at(2), is("com.googlecode.junittime.domain.TestCaseRepositoryTest, shouldSortTestsAccordingToDurationDesc, 0.002"));
+        assertThat(lines.at(3), is("com.googlecode.junittime.domain.TestCaseTest, shouldReturnOneIfAIsSlowerThanB, 0.001"));
+        assertThat(lines.at(4), is("com.googlecode.junittime.domain.TestCaseTest, shouldReturnMinusOneIfAIsFasterThanB, 0.001"));
+        assertThat(lines.at(5), is("com.googlecode.junittime.domain.TestCaseTest, shouldReturnZeroIfAEqualsToB, 0.001"));
     }
 
+    @Test
+    public void shouldThrowIfFailToExtract() throws IOException {
+        FileUtils.touch(new File(testResultsDir, "invalid.xml"));
+
+        try {
+            jt.execute();
+            fail("should throw when fail to extract");
+        } catch (BuildException e) {            
+        }
+    }
+
+    private FileSet createJunitReportFiles(File dir) throws IOException {
+        FileSet testResults = new FileSet();
+        testResults.setProject(new Project());
+        testResults.setDir(dir);
+        return testResults;
+    }
+
+    private File generateTestResults() throws IOException {
+        File testResultsDir = FileUtil.createTempFolder();
+        FileUtils.copyDirectory(new File(TEST_DATA), testResultsDir);
+        return testResultsDir;
+    }    
 }

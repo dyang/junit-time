@@ -3,10 +3,16 @@ package com.googlecode.junittime;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.commons.io.FileUtils;
+import org.apache.tools.ant.types.resources.FileResource;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
+
+import com.googlecode.junittime.domain.TestCaseRepository;
+import com.googlecode.junittime.domain.XmlTestCaseExtractor;
+import com.googlecode.junittime.domain.ExtractionException;
+import com.googlecode.junittime.domain.reporting.CSVReportGenerator;
 
 public class JunitTime extends Task {
     static final String REPORT_CSV = "junit-time-report.csv";
@@ -24,29 +30,33 @@ public class JunitTime extends Task {
 
     public void execute() throws BuildException {
         ensureTestResultsExist();
-        generateReport();
+        try {
+            report(extract());
+        } catch (ExtractionException e) {
+            throw new BuildException("Unable to extract test execution information", e);
+        } catch (IOException e) {
+            throw new BuildException("Unable to generate junit-time report", e);
+        }
     }
 
-    private void generateReport() {
-        File reportFile = reportFile();
-        try {
-            createFile(reportFile);
-        } catch (IOException e) {
-            throw new BuildException("Unable to create report at " + reportFile.getAbsolutePath());
+    private TestCaseRepository extract() throws ExtractionException {
+        TestCaseRepository repository = new TestCaseRepository();
+        Iterator iterator = from.iterator();
+        while (iterator.hasNext()) {
+            FileResource file = (FileResource)iterator.next();
+            new XmlTestCaseExtractor(file.getFile()).extractTo(repository);
         }
+        return repository;
+    }
+
+    private void report(TestCaseRepository repository) throws IOException {
+        File reportFile = new File(toDir, REPORT_CSV);
+        new CSVReportGenerator().generate(reportFile, repository);
     }
 
     private void ensureTestResultsExist() {
         if (!from.getDir().exists()) {
             throw new BuildException("Directory " + from.getDir().getAbsolutePath() + " not found");
         }
-    }
-
-    private File reportFile() {
-        return new File(toDir, REPORT_CSV);
-    }
-
-    private void createFile(File file) throws IOException {
-        FileUtils.touch(file);
     }
 }

@@ -25,8 +25,8 @@ public class CSVReportGeneratorTest {
         assertThat(reportFile.exists(), is(true));
         Lines lines = new Lines(FileUtils.readLines(reportFile));
         assertThat(lines.size(), is(3));
-        assertThat(lines.at(0), is("class3, test3, 3.00"));
-        assertThat(lines.at(1), is("class2, test2, 2.00"));
-        assertThat(lines.at(2), is("class1, test1, 1.00"));        
+        assertThat(lines.at(0), is("class3, test3, 3.000"));
+        assertThat(lines.at(1), is("class2, test2, 2.000"));
+        assertThat(lines.at(2), is("class1, test1, 1.000"));        
     }
 }

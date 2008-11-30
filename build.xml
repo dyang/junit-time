@@ -8,10 +8,13 @@
     <property name="target.common" value="${target}/common"/>
     <property name="target.test" value="${target}/test"/>
     <property name="target.reports" value="${target}/reports"/>
+    <property name="target.reports.jt" value="${target}/junit-time"/>
+    <property name="target.dist" value="${target}/dist/"/>
+    <property name="target.dist.jar" value="${target.dist}/junit-time.jar"/>
     <property name="pattern.test" value="*Test.java"/>
 
     <!-- main -->
-    <target name="default" depends="clean, init, compile.src, compile.test, test"/>
+    <target name="default" depends="clean, init, compile.src, compile.test, test, dist, analyze"/>
 
     <!-- pathes -->
     <path id="lib.classpath">
@@ -19,6 +22,11 @@
         <pathelement location="${lib}/junit-4.4.jar"/>
         <pathelement location="${lib}/commons-io-1.4.jar"/>
         <pathelement location="${lib}/commons-lang-2.4.jar"/>
+    </path>
+
+    <path id="target.dist.classpath">
+        <pathelement location="${target.dist.jar}" />
+        <path refid="lib.classpath" />
     </path>
 
     <!-- patternset -->
@@ -78,13 +86,23 @@
         </junit>
     </target>
 
-    <!--
+    <target name="dist">
+        <mkdir dir="${target.dist}" />
+        <jar destfile="${target.dist.jar}">
+            <fileset dir="${target.common}">
+                <include name="**/*.class" />
+            </fileset>
+        </jar>
+    </target>
+
     <target name="analyze">
-        <junit-time todir="${target.reports}">
+        <taskdef name="junit-time"
+             classpathref="target.dist.classpath"
+             classname="com.googlecode.junittime.JunitTime" />
+        <junit-time todir="${target.reports.jt}">
             <fileset dir="${target.reports}">
                 <include name="**/*Test.xml" />
             </fileset>
         </junit-time>
     </target>
-    -->
 </project>

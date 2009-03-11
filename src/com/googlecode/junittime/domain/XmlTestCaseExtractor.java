@@ -18,12 +18,9 @@ public class XmlTestCaseExtractor implements TestCaseExtractor {
         try {
             SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
             parser.parse(file, new TestCaseHandler(repository));
-        } catch (SAXException e) {
-            throw new ExtractionException(e);
-        } catch (IOException e) {
-            throw new ExtractionException(e);
-        } catch (ParserConfigurationException e) {
-            throw new ExtractionException(e);
+        } catch (Exception e) {
+            throw new ExtractionException(
+                    "Unable to extract test information from file " + file.getAbsolutePath(), e);
         }
     }
 }

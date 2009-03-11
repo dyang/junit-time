@@ -32,7 +32,7 @@ public class HtmlReportGenerator implements ReportGenerator {
             for (int i = 0; i < numberOfTestCasesToDisplay; i++) {
                 TestCase testCase = testCases.get(i);
                 writer.append("<li>");
-                writer.append(format("%s %s: %.2f", testCase.getClassName(), testCase.getTestName(), testCase.getDuration()));
+                writer.append(format("%s %s: %.2f seconds", testCase.getClassName(), testCase.getTestName(), testCase.getDuration()));
                 writer.append("</li>");
                 writer.newLine();
             }

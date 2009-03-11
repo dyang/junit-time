@@ -35,9 +35,9 @@ public class JunitTime extends Task {
         try {
             report(extract());
         } catch (ExtractionException e) {
-            throw new BuildException("Unable to extract test execution information", e);
+            throw new BuildException(e);
         } catch (IOException e) {
-            throw new BuildException("Unable to generate junit-time report", e);
+            throw new BuildException(e);
         }
     }
 

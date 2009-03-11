@@ -2,6 +2,7 @@ package com.googlecode.junittime.domain.reporting;
 
 import java.util.List;
 
+// TODO - what is this class for???
 public class Lines {
     private List lines;
 

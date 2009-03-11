@@ -13,9 +13,11 @@ import com.googlecode.junittime.domain.TestCaseRepository;
 import com.googlecode.junittime.domain.XmlTestCaseExtractor;
 import com.googlecode.junittime.domain.ExtractionException;
 import com.googlecode.junittime.domain.reporting.CSVReportGenerator;
+import com.googlecode.junittime.domain.reporting.HtmlReportGenerator;
 
 public class JunitTime extends Task {
     static final String REPORT_CSV = "junit-time-report.csv";
+    static final String REPORT_HTML = "junit-time-report.html";
 
     private File toDir;
     private FileSet from;
@@ -50,8 +52,8 @@ public class JunitTime extends Task {
     }
 
     private void report(TestCaseRepository repository) throws IOException {
-        File reportFile = new File(toDir, REPORT_CSV);
-        new CSVReportGenerator().generate(reportFile, repository);
+        File reportFile = new File(toDir, REPORT_HTML);
+        new HtmlReportGenerator().generate(reportFile, repository);
     }
 
     private void ensureTestResultsExist() {

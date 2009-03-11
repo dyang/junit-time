@@ -4,6 +4,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +13,6 @@ import java.util.Iterator;
 import com.googlecode.junittime.domain.TestCaseRepository;
 import com.googlecode.junittime.domain.XmlTestCaseExtractor;
 import com.googlecode.junittime.domain.ExtractionException;
-import com.googlecode.junittime.domain.reporting.CSVReportGenerator;
 import com.googlecode.junittime.domain.reporting.HtmlReportGenerator;
 
 public class JunitTime extends Task {
@@ -45,14 +45,15 @@ public class JunitTime extends Task {
         TestCaseRepository repository = new TestCaseRepository();
         Iterator iterator = from.iterator();
         while (iterator.hasNext()) {
-            FileResource file = (FileResource)iterator.next();
+            FileResource file = (FileResource) iterator.next();
             new XmlTestCaseExtractor(file.getFile()).extractTo(repository);
         }
         return repository;
     }
 
     private void report(TestCaseRepository repository) throws IOException {
-        File reportFile = new File(toDir, REPORT_HTML);
+        File reportFile = new File(toDir, REPORT_HTML);        
+        FileUtils.touch(reportFile);
         new HtmlReportGenerator().generate(reportFile, repository);
     }
 

@@ -55,6 +55,7 @@ public class JunitTime extends Task {
         File reportFile = new File(toDir, REPORT_HTML);        
         FileUtils.touch(reportFile);
         new HtmlReportGenerator().generate(reportFile, repository);
+        System.out.println("Report generated at " + reportFile.getAbsolutePath());
     }
 
     private void ensureTestResultsExist() {

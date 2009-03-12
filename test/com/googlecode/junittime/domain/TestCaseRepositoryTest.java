@@ -24,4 +24,9 @@ public class TestCaseRepositoryTest {
         assertThat(allSorted.get(1), is(TEST3));
         assertThat(allSorted.get(2), is(TEST1));
     }
+
+    @Test
+    public void shouldReturnTestTotalDuration() {
+        assertThat(repository.duration(), is(0.33d));
+    }
 }

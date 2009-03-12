@@ -4,11 +4,15 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import java.util.List;
+
 public class TestCaseHandler extends DefaultHandler {
     private static final String TESTCASE = "testcase";
+    private static final String TESTSUITE = "testsuite";
     private static final String CLASSNAME = "classname";
     private static final String TESTNAME = "name";
     private static final String DURATION = "time";
+    private static final String TIME = "time";
     private TestSuite testSuite;
 
     public TestCaseHandler(TestCaseRepository repository) {
@@ -26,7 +30,10 @@ public class TestCaseHandler extends DefaultHandler {
             String testName = attributes.getValue(TESTNAME);
             Double duration = Double.valueOf(attributes.getValue(DURATION));
             testSuite.add(new TestCase(packageName, className, testName, duration));
+        } else if (TESTSUITE.equals(qName)) {
+            testSuite.setDuration(Double.valueOf(attributes.getValue(TIME)));
         }
+
     }
 
     private int classNameStartIndex(int separatorIndex) {

@@ -29,4 +29,12 @@ public class TestCaseRepository {
     public void add(TestSuite testSuite) {
         testSuites.add(testSuite);
     }
+
+    public double duration() {
+        double duration = 0;
+        for (TestSuite testSuite : testSuites) {
+            duration += testSuite.getDuration();
+        }
+        return duration;
+    }
 }

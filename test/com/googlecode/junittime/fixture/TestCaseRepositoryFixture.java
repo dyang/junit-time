@@ -15,6 +15,7 @@ public class TestCaseRepositoryFixture {
 
     public static TestCaseRepository createRepositoryWith(TestCase... testCases) {
         TestSuite suite = new TestSuite();
+        suite.setDuration(0.33d);
         for (TestCase testCase : testCases) {
             suite.add(testCase);
         }

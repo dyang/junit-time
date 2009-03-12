@@ -11,10 +11,11 @@ public class HtmlReportGenerator implements ReportGenerator {
     private static final int MAX_NUMBER_OF_TEST_CASES_ON_REPORT = 10;
 
     public void generate(File reportFile, TestCaseRepository testCaseRepository) throws IOException {
-        writeToFile(reportFile, testCaseRepository.byDurationDesc());
+        writeToFile(reportFile, testCaseRepository.byDurationDesc(), testCaseRepository.duration());
     }
 
-    private void writeToFile(File reportFile, List<TestCase> testCases) throws IOException {
+    // TODO - use stringTemplate? 
+    private void writeToFile(File reportFile, List<TestCase> testCases, double duration) throws IOException {
         BufferedWriter writer = null;
         try {
             writer = new BufferedWriter(new FileWriter(reportFile));
@@ -23,7 +24,16 @@ public class HtmlReportGenerator implements ReportGenerator {
             writer.newLine();
             writer.append("<body>");
             writer.newLine();
-            writer.append("<h1>Slow Tests</h2>");
+
+            writer.append("<h1>Tests</h2>");
+            writer.newLine();
+
+            writer.append(format("<h2>Total duration</h2>"));
+            writer.newLine();
+            writer.append(format("%f seconds", duration));
+            writer.newLine();
+
+            writer.append("<h2>Slow tests</h2>");
             writer.newLine();
             writer.append("<ol>");
             writer.newLine();

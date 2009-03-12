@@ -62,4 +62,15 @@ public class XmlTestCaseExtractorTest {
         assertThat(testCases.get(0),
                 is(new TestCase("", "HtmlReportGeneratorTest", "shouldGenerateReportThatHighlightSlowTests", 0.001)));
     }
+
+    @Test
+    public void shouldExtractTestSuiteDuration() throws ExtractionException {
+        XmlTestCaseExtractor extractor = new XmlTestCaseExtractor(new File(TEST_DATA, FILE_WITH_TWO_TESTCASES));
+        TestCaseRepository repository = new TestCaseRepository();
+        extractor.extractTo(repository);
+
+        double duration = repository.duration();
+        assertThat(duration, is(0.331d));
+        
+    }
 }

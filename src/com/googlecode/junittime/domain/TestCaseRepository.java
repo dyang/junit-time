@@ -8,6 +8,9 @@ import java.util.Comparator;
 public class TestCaseRepository {
     private List<TestCase> testCases = new ArrayList<TestCase>();
 
+    /**
+     * @deprecated only can add testSuite
+     */
     public void add(TestCase testCase) {
         testCases.add(testCase);
     }

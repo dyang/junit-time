@@ -2,6 +2,7 @@ package com.googlecode.junittime.fixture;
 
 import com.googlecode.junittime.domain.TestCase;
 import com.googlecode.junittime.domain.TestCaseRepository;
+import com.googlecode.junittime.domain.TestSuite;
 
 public class TestCaseRepositoryFixture {
     public static final TestCase TEST1 = new TestCase("package.class1", "test", 1d);
@@ -9,18 +10,16 @@ public class TestCaseRepositoryFixture {
     public static final TestCase TEST3 = new TestCase("package.class3", "test", 1.5d);
 
     public static TestCaseRepository createDefaultRepository() {
-        TestCaseRepository repository = new TestCaseRepository();
-        repository.add(TEST1);
-        repository.add(TEST2);
-        repository.add(TEST3);
-        return repository;
+        return createRepositoryWith(TEST1, TEST2, TEST3);
     }
 
     public static TestCaseRepository createRepositoryWith(TestCase... testCases) {
-        TestCaseRepository repository = new TestCaseRepository();
+        TestSuite suite = new TestSuite();
         for (TestCase testCase : testCases) {
-            repository.add(testCase);
+            suite.add(testCase);
         }
+        TestCaseRepository repository = new TestCaseRepository();
+        repository.add(suite);
         return repository;
     }
 

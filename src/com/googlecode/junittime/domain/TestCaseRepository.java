@@ -6,22 +6,27 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class TestCaseRepository {
-    private List<TestCase> testCases = new ArrayList<TestCase>();
-
-    /**
-     * @deprecated only can add testSuite
-     */
-    public void add(TestCase testCase) {
-        testCases.add(testCase);
-    }
+    private List<TestSuite> testSuites = new ArrayList<TestSuite>();
 
     public List<TestCase> byDurationDesc() {
-        Collections.sort(testCases, new Comparator<TestCase>() {
-
+        List<TestCase> allTestCases = allTestCases();
+        Collections.sort(allTestCases, new Comparator<TestCase>() {
             public int compare(TestCase testCase1, TestCase testCase2) {
-                return testCase1.compareDuration(testCase2).toInt();                
+                return testCase1.compareDuration(testCase2).toInt();
             }
         });
-        return testCases;
+        return allTestCases;
+    }
+
+    private List<TestCase> allTestCases() {
+        List<TestCase> allTestCases = new ArrayList<TestCase>();
+        for (TestSuite testSuite : testSuites) {
+            allTestCases.addAll(testSuite.getTestCases());
+        }
+        return allTestCases;
+    }
+
+    public void add(TestSuite testSuite) {
+        testSuites.add(testSuite);
     }
 }

@@ -13,6 +13,7 @@ import java.util.Iterator;
 import com.googlecode.junittime.domain.TestCaseRepository;
 import com.googlecode.junittime.domain.XmlTestCaseExtractor;
 import com.googlecode.junittime.domain.ExtractionException;
+import com.googlecode.junittime.domain.TestSuite;
 import com.googlecode.junittime.domain.reporting.HtmlReportGenerator;
 
 public class JunitTime extends Task {

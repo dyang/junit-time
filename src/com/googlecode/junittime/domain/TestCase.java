@@ -44,6 +44,7 @@ public class TestCase {
         }
     }
 
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -52,15 +53,19 @@ public class TestCase {
 
         if (Double.compare(testCase.duration, duration) != 0) return false;
         if (className != null ? !className.equals(testCase.className) : testCase.className != null) return false;
+        if (packageName != null ? !packageName.equals(testCase.packageName) : testCase.packageName != null)
+            return false;
         if (testName != null ? !testName.equals(testCase.testName) : testCase.testName != null) return false;
 
         return true;
     }
 
+    @Override
     public int hashCode() {
         int result;
         long temp;
-        result = (className != null ? className.hashCode() : 0);
+        result = packageName != null ? packageName.hashCode() : 0;
+        result = 31 * result + (className != null ? className.hashCode() : 0);
         result = 31 * result + (testName != null ? testName.hashCode() : 0);
         temp = duration != +0.0d ? Double.doubleToLongBits(duration) : 0L;
         result = 31 * result + (int) (temp ^ (temp >>> 32));
@@ -68,6 +73,6 @@ public class TestCase {
     }
 
     public String toString() {
-        return String.format("[%s.%s.%s %f]", packageName, className, testName, duration);
+        return String.format("[%s | %s | %s | %f]", packageName, className, testName, duration);
     }
 }

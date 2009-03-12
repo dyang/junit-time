@@ -4,11 +4,17 @@ import org.apache.commons.lang.StringUtils;
 import static com.googlecode.junittime.domain.Slowness.*;
 
 public class TestCase {
+    private String packageName;
     private String className;
     private String testName;
     private double duration;
 
     public TestCase(String className, String testName, double duration) {
+        this("", className, testName, duration);
+    }
+
+    public TestCase(String packageName, String className, String testName, double duration) {
+        this.packageName = packageName;
         this.className = className;
         this.testName = testName;
         this.duration = duration;
@@ -59,5 +65,9 @@ public class TestCase {
         temp = duration != +0.0d ? Double.doubleToLongBits(duration) : 0L;
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
+    }
+
+    public String toString() {
+        return String.format("[%s.%s.%s %f]", packageName, className, testName, duration);
     }
 }

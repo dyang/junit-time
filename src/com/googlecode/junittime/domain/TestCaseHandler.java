@@ -17,10 +17,14 @@ public class TestCaseHandler extends DefaultHandler {
 
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         if (TESTCASE.equals(qName)) {
-            String className = attributes.getValue(CLASSNAME);
+            String packageNameAndClassName = attributes.getValue(CLASSNAME);
+            int separatorIndex = packageNameAndClassName.lastIndexOf(".") + 1;
+            String packageName = packageNameAndClassName.substring(0, separatorIndex);
+            String className = packageNameAndClassName.substring(separatorIndex, packageNameAndClassName.length());
             String testName = attributes.getValue(TESTNAME);
             Double duration = Double.valueOf(attributes.getValue(DURATION));
-            repository.add(new TestCase(className, testName, duration));            
+            repository.add(new TestCase(packageName, className, testName, duration));
         }
     }
+
 }
